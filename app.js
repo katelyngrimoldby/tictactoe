@@ -1,4 +1,6 @@
 const gameBoard = (() => {
+    const container = document.querySelector('.container');
+
     const initBoard = (arr) => {
         for (i = 0; i < 9; i++) {
             id = (i+1).toString();
@@ -13,19 +15,23 @@ const gameBoard = (() => {
     }
 
     let boardArr = [];
-    return {initBoard, renderMark, boardArr};
+    return {container, initBoard, renderMark, boardArr};
 })();
 
 const gameManager = (() => {
     let turn = true //true for X, false for O
     const makeMove = (e) => {
-        let id = e.target.id;
-        if (turn) {
-            gameBoard.renderMark(id, x.getMark(), x.getColor());
+        if(e.target.textContent == '') {
+            let id = e.target.id;
+            if (turn) {
+                gameBoard.renderMark(id, x.getMark(), x.getColor());
+            }else {
+                gameBoard.renderMark(id, o.getMark(), o.getColor())
+            }
+            turn = !turn
         }else {
-            gameBoard.renderMark(id, o.getMark(), o.getColor())
+            alert('invalid')
         }
-        turn = !turn
     }
     return {makeMove}
 })();
@@ -46,6 +52,4 @@ const o = Player('O', 'blue')
 
 window.onload = gameBoard.initBoard(gameBoard.boardArr)
 
-const container = document.querySelector('.container');
-
-container.addEventListener('click', gameManager.makeMove)
+gameBoard.container.addEventListener('click', gameManager.makeMove)
