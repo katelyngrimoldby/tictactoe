@@ -10,6 +10,7 @@ const Player = (marker, color) => {
 }
 
 const gameBoard = (() => {
+    let boardArr = [];
     const initBoard = (arr) => {
         for (i = 0; i < 9; i++) {
             id = (i+1).toString();
@@ -22,9 +23,7 @@ const gameBoard = (() => {
         boardArr[id-1].style.color = color;
         boardArr[id-1].textContent = mark;
     }
-
-    let boardArr = [];
-    return {initBoard, renderMark, boardArr};
+    return {boardArr, initBoard, renderMark};
 })();
 
 const gameManager = (() => {
@@ -34,6 +33,17 @@ const gameManager = (() => {
     let winner = ''
     const x = Player('X', 'red')
     const o = Player('O', 'blue')
+
+    const setRound = (num) => {
+        round = num
+    }
+    const setGameOver = (boo) => {
+        gameOver = boo
+    }
+    const setWinner = (str) => {
+        winner = str
+    }
+
     const makeMove = (e) => {
         if(e.target.textContent == '' && gameOver == false) {
             let id = e.target.id;
@@ -110,11 +120,23 @@ const gameManager = (() => {
     }
 
 
-    return {makeMove}
+    return {setRound, setGameOver, setWinner, makeMove}
 })();
 
 const displayController = (() => {
     const container = document.querySelector('.container');
+    const resetBtn = document.getElementById('resetBtn');
+
     container.addEventListener('click', gameManager.makeMove);
+    resetBtn.addEventListener('click', () => {
+        for (i = 0; i < 9; i++) {
+            gameBoard.boardArr[i].textContent = '';
+            gameBoard.boardArr[i].style.color = 'black';
+        }
+        gameManager.setRound(0)
+        gameManager.setGameOver(false)
+        gameManager.setWinner('')
+    });
     window.onload = gameBoard.initBoard(gameBoard.boardArr);
+
 })();
